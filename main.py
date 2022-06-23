@@ -1,62 +1,51 @@
 from dotenv import load_dotenv
 import json
-
-from discord_slash import SlashCommand
-from discord_slash import SlashContext
+import os
+import time
 
 import discord
 from discord.ext.commands import Bot
 
-import os
+import random
 
 intents = discord.Intents.default()
 intents.members = True
 
 bot = Bot(command_prefix="+", intents=discord.Intents.all())
-slash = SlashCommand(bot, sync_commands=True)
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-# video: https://youtu.be/CE0noW3flT8
-
-whitelist = open("whitelist.json")
+whitelist = open("users.json")
 whitelist = json.load(whitelist)
 
 @bot.event
 async def on_ready():
-    activity = discord.Game(name="finn abfucken")
+    activity = discord.Game(name="spamming")
     await bot.change_presence(status=discord.Status.online, activity=activity)
-
-    
-
-    print("ready um Finn abzufucken")
+    print("ready to spam")
 
 def checkMember(member):
     for i in whitelist["ultra"]:
         if i == member:
             return "ultra"
         else:
-            for i in whitelist["protectionPremium"]:
-                return "premium"
-            else:
-                for i in whitelist["protectionLow"]:
-                    return "low"
-                else:
-                    return False
+            for i in whitelist["thorns"]:
+                if i == member:
+                    return "thorns"
+            else:   
+                return "error"
 
-    
+def checkAuthor(author):
+    return false
+
 @bot.command()
 async def abfuck(ctx, member: discord.Member, msg):
-    member = str(member)
-    if checkMember(member) == "ultra":
-        await ctx.send(member + " has ultra rank")
-    else: 
-        i=0
-        while True:
-            i=i+1
-            await member.send(msg + "\ncount: " + str(i))
-            print("send message to " + member + " \nmessage: " + msg + "\n count: " + str(i) + "\n------------------")
-            time.sleep(3)
+    print(ctx.author)
+    memberStr = str(member)
+    if checkMember(memberStr) == "ultra":
+        await ctx.send(memberStr + " has ultra rank")
+    elif checkMember(memberStr) == "thorns":
+        await ctx.send("Jokes on you " + memberStr + " has thorns prepare for the worst")
 
 bot.run(TOKEN)
