@@ -16,6 +16,7 @@ whitelist = json.load(whitelist)
 
 premiumLimit = 50
 standardLimit = 20
+ultraLimit = 100
 
 @bot.event
 async def on_ready():
@@ -39,10 +40,15 @@ def checkAuthor(author):
         if i == author:
             return "premium"
         else:
-            return "standard"
+            for i in whitelist["ultra"]:
+                if i == author:
+                    return "ultra"
+                else:
+                    return "standard"
 
 async def spamming(victim, limit, msg):
     i = 0
+    msg = " ".join(str(x) for x in msg)
     while limit > i:
         i=i+1
         embed = discord.Embed(colour=0xFF1828)
@@ -52,11 +58,9 @@ async def spamming(victim, limit, msg):
 
 @bot.command()
 async def spam(ctx, member: discord.Member, *msg):
-    memberStr = str(member)
-    memberStr = memberStr[:-5]
+    memberStr = str(member)[:-5]
 
-    authorStr = str(ctx.author)
-    authorStr = authorStr[:-5]
+    authorStr = str(ctx.author)[:-5]
 
     memberState = checkMember(memberStr)
     authorState = checkAuthor(authorStr)
@@ -71,7 +75,7 @@ async def spam(ctx, member: discord.Member, *msg):
         embed.add_field(name=authorStr + " has tried to spam you", value="but was denied", inline=False)
         await member.send(embed=embed)
 
-        await spamming(ctx.author, premiumLimit, "how dare you try to challenge the ultra ranked")
+        await spamming(ctx.author, 100, "how dare you try to challenge the ultra ranked")
 
     elif memberState == "thorns":
         embed = discord.Embed(colour=0xFF1828)
@@ -89,6 +93,14 @@ async def spam(ctx, member: discord.Member, *msg):
         embed = discord.Embed(colour=0x4AFB71)
         embed.add_field(name="spamming " + memberStr, value="have fun", inline=False)
         embed.set_footer(text="author rank: " + authorState + "\nspamlimit: " + str(premiumLimit))
+        await ctx.send(embed=embed)
+
+        await spamming(member, premiumLimit, msg)
+
+    elif authorState == "ultra":
+        embed = discord.Embed(colour=0x4AFB71)
+        embed.add_field(name="spamming " + memberStr, value="have fun", inline=False)
+        embed.set_footer(text="author rank: " + authorState + "\nspamlimit: " + str(ultraLimit))
         await ctx.send(embed=embed)
 
         await spamming(member, premiumLimit, msg)
