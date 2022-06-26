@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # custom
-./users.json
+users.json

@@ -19,6 +19,9 @@ TOKEN = os.getenv("TOKEN")
 whitelist = open("users.json")
 whitelist = json.load(whitelist)
 
+premiumLimit = 50
+standardLimit = 20
+
 @bot.event
 async def on_ready():
     activity = discord.Game(name="spamming")
@@ -37,15 +40,71 @@ def checkMember(member):
                 return "error"
 
 def checkAuthor(author):
-    return false
+    for i in whitelist["spammerPremium"]:
+        if i == author:
+            return "premium"
+        else:
+            return "standard"
+
+async def spamming(victim, limit, msg):
+    i = 0
+    while limit > i:
+        i=i+1
+        embed = discord.Embed(colour=0xFF1828)
+        embed.add_field(name=msg, value="jokes on you", inline=False)
+        await victim.send(embed=embed)
+        time.sleep(1)
 
 @bot.command()
 async def abfuck(ctx, member: discord.Member, msg):
-    print(ctx.author)
     memberStr = str(member)
-    if checkMember(memberStr) == "ultra":
-        await ctx.send(memberStr + " has ultra rank")
-    elif checkMember(memberStr) == "thorns":
-        await ctx.send("Jokes on you " + memberStr + " has thorns prepare for the worst")
+    memberStr = memberStr[:-5]
+
+    authorStr = str(ctx.author)
+    authorStr = authorStr[:-5]
+
+    memberState = checkMember(memberStr)
+    authorState = checkAuthor(authorStr)
+
+    if memberState == "ultra":
+        embed = discord.Embed(colour=0xFF1828)
+        embed.add_field(name=memberStr + " has ultra rank", value="how dare you try to challenge the ultra ranked", inline=False)
+        embed.set_footer(text="prepair for the worst")
+        await ctx.send(embed=embed)
+
+        embed = discord.Embed(colour=0x4AFB71)
+        embed.add_field(name=authorStr + " has tried to spam you", value="but was denied", inline=False)
+        await member.send(embed=embed)
+
+        await spamming(ctx.author, premiumLimit, "how dare you try to challenge the ultra ranked")
+
+    elif memberState == "thorns":
+        embed = discord.Embed(colour=0xFF1828)
+        embed.add_field(name=memberStr + " has thorns", value="Jokes on you", inline=False)
+        embed.set_footer(text="prepair for the worst")
+        await ctx.send(embed=embed)
+
+        embed = discord.Embed(colour=0x4AFB71)
+        embed.add_field(name=authorStr + " has tried to spam you", value="but was denied", inline=False)
+        await member.send(embed=embed)
+
+        await spamming(ctx.author, standardLimit, memberStr + " has thorns so jokes on you")
+
+    elif authorState == "premium":
+        embed = discord.Embed(colour=0x4AFB71)
+        embed.add_field(name="spamming " + memberStr, value="have fun", inline=False)
+        embed.set_footer(text="author rank: " + authorState + "\nspamlimit: " + str(premiumLimit))
+        await ctx.send(embed=embed)
+
+        await spamming(member, premiumLimit, msg)
+    else:
+        embed = discord.Embed(colour=0x4AFB71)
+        embed.add_field(name="spamming " + memberStr, value="have fun", inline=False)
+        embed.set_footer(text="author rank: " + authorState + "\nspamlimit: " + str(standardLimit))
+        await ctx.send(embed=embed)
+
+        await spamming(member, standardLimit, msg)
 
 bot.run(TOKEN)
+
+#vince_vibin#7429
