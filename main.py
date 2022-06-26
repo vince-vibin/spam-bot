@@ -6,12 +6,7 @@ import time
 import discord
 from discord.ext.commands import Bot
 
-import random
-
-intents = discord.Intents.default()
-intents.members = True
-
-bot = Bot(command_prefix="+", intents=discord.Intents.all())
+bot = Bot(command_prefix="-", intents=discord.Intents.all())
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
@@ -24,7 +19,7 @@ standardLimit = 20
 
 @bot.event
 async def on_ready():
-    activity = discord.Game(name="spamming")
+    activity = discord.Game(name="spamming / Prefix: -")
     await bot.change_presence(status=discord.Status.online, activity=activity)
     print("ready to spam")
 
@@ -56,7 +51,7 @@ async def spamming(victim, limit, msg):
         time.sleep(1)
 
 @bot.command()
-async def abfuck(ctx, member: discord.Member, msg):
+async def spam(ctx, member: discord.Member, *msg):
     memberStr = str(member)
     memberStr = memberStr[:-5]
 
