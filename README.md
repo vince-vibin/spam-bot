@@ -2,7 +2,7 @@
 Just a simple bot i made to spam ppl on discord.  
 > [Invite here](https://discord.com/api/oauth2/authorize?client_id=988044003599589406&permissions=274877974528&scope=bot)
 
-**The idea is from [@ServerStatus]([https://discord.com/api/oauth2/authorize?client_id=988044003599589406&permissions=274877974528&scope=bot](https://github.com/ServerStatus1))**
+**The idea is from [@ServerStatus](https://github.com/ServerStatus1)**
 ## Roles
 There are 3 different roles defined in the [user.json](https://github.com/vince-vibin/spam-bot/blob/master/users.json) file
 ### ultra
